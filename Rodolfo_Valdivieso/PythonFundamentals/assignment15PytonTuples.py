@@ -18,6 +18,6 @@ def tuples(dictionary):
 		tupleX = tupleX + (dictionary[keys],)
 		listOfTuples.append(tupleX)
 		tupleX = ()
-	print listOfTuples
+	return listOfTuples
 
-tuples(my_dict)
+print tuples(my_dict)
