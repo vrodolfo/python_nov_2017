@@ -43,6 +43,3 @@ product1.returnx("in the box")
 product1.displayInfo()
 product1.returnx("opened")
 product1.displayInfo()
-
-
-
