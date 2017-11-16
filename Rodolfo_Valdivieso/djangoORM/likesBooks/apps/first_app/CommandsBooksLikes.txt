@@ -1,0 +1,65 @@
+Create 3 different user accounts
+User.objects.create(first_name="Emma", last_name="Watson", email_address="email")
+User.objects.all()
+
+Have the first user create 2 books.
+Book.objects.create(name="Book1", desc="desc1", uploaded_by=(User.objects.get(id=1)))
+Book.objects.create(name="Book2", desc="desc2", uploaded_by=(User.objects.get(id=1)))
+
+Have the second user create 2 books.
+Book.objects.create(name="Book3", desc="desc3", uploaded_by=(User.objects.get(id=2)))
+Book.objects.create(name="Book4", desc="desc4", uploaded_by=(User.objects.get(id=2)))
+
+Have the third user create 2 books.
+Book.objects.create(name="Book5", desc="desc5", uploaded_by=(User.objects.get(id=3)))
+Book.objects.create(name="Book6", desc="desc6", uploaded_by=(User.objects.get(id=3)))
+
+
+Have the first user like the last book and the first book
+User.objects.first().liked_books.add(Book.objects.last())
+User.objects.first().liked_books.add(Book.objects.first())
+
+
+Have the second user like the first book and the third book
+User.objects.get(id=2).liked_books.add(Book.objects.first())
+User.objects.get(id=2).liked_books.add(Book.objects.get(id=3))
+
+Have the third user like all books
+>>> User.objects.get(id=3).liked_books.add(Book.objects.get(id=1))
+>>> User.objects.get(id=3).liked_books.add(Book.objects.get(id=2))
+>>> User.objects.get(id=3).liked_books.add(Book.objects.get(id=3))
+>>> User.objects.get(id=3).liked_books.add(Book.objects.get(id=4))
+>>> User.objects.get(id=3).liked_books.add(Book.objects.get(id=5))
+>>> User.objects.get(id=3).liked_books.add(Book.objects.get(id=6))
+
+Display all users who like the first book
+Book.objects.get(id=1).liked_users.all()
+
+Display the user who uploaded the first book
+Book.objects.get(id=1).uploaded_by
+
+Display all users who like the second book
+Book.objects.get(id=2).liked_users.all()
+
+Display the user who uploaded the second book
+Book.objects.get(id=2).uploaded_by
+
+class User(models.Model):
+	first_name    = models.CharField(max_length=255)
+	last_name     = models.CharField(max_length=255)
+	email_address = models.CharField(max_length=255)
+	created_at    = models.DateTimeField(auto_now_add = True)
+	updated_at    = models.DateTimeField(auto_now=True)
+	def __unicode__(self):
+		return "id: " + str(self.id) + "first: " + str(self.first_name) + ", last: " + self.last_name + ", email: " + self.email_address
+
+class Book(models.Model):
+	liked_users   = models.ManyToManyField(User, related_name="liked_books")
+	uploaded_by   = models.ForeignKey(User, related_name = "uploaded_books")
+	name          = models.CharField(max_length=255)
+	desc          = models.CharField(max_length=255)
+	created_at    = models.DateTimeField(auto_now_add = True)
+	updated_at    = models.DateTimeField(auto_now=True)
+	def __unicode__(self):
+		return "id: " + str(self.id) +"name: " + str(self.name) + ", desc: " + self.desc 
+
